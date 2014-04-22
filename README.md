@@ -1,6 +1,8 @@
 # simpledateformat.js
 JavaScript implementation for SimpleDateFormat
 
+## Features:
+- Caches the [format, SimpleDateFormatter]
 
 ## Date & Time Patterns:
 | Supported | Letter | Date or Time Component | Presentation | Examples |
