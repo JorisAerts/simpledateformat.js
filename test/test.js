@@ -1,50 +1,50 @@
 (function(){
-function C(f){ return new SimpleDateFormat(f); }var time=1398200759308,date=new Date(1398200759308);
-//dd-MM-yyyy HH:mm:ss.SSS: 22-04-2014 23:05:59.308
-var pattern_0="dd-MM-yyyy HH:mm:ss.SSS",formatted_0="22-04-2014 23:05:59.308",parsed_0=new Date(1398200759308);
+function C(f){ return new SimpleDateFormat(f); }var time=1398204618916,date=new Date(1398204618916);
+//dd-MM-yyyy HH:mm:ss.SSS: 23-04-2014 00:10:18.916
+var pattern_0="dd-MM-yyyy HH:mm:ss.SSS",formatted_0="23-04-2014 00:10:18.916",parsed_0=new Date(1398204618916);
 var sdf_0=C(pattern_0), date_0=sdf_0.parse(formatted_0);
 console.log(pattern_0);
-console.log(1398200759308 == date_0.getTime(),1398200759308,date_0.getTime());
+console.log(1398204618916 == date_0.getTime(),1398204618916,date_0.getTime());
 console.log(parsed_0,date_0);
 console.log(sdf_0,"\n");
 
-//E: Tue
-var formatted_1="Tue",pattern_1="E",parsed_1=new Date(428400000);
+//E: Wed
+var formatted_1="Wed",pattern_1="E",parsed_1=new Date(514800000);
 var sdf_1=C(pattern_1), date_1=sdf_1.parse(formatted_1);
 console.log(pattern_1);
-console.log(428400000 == date_1.getTime(),428400000,date_1.getTime());
+console.log(514800000 == date_1.getTime(),514800000,date_1.getTime());
 console.log(parsed_1,date_1);
 console.log(sdf_1,"\n");
 
-//EE: Tue
-var pattern_2="EE",formatted_2="Tue",parsed_2=new Date(428400000);
+//EE: Wed
+var pattern_2="EE",formatted_2="Wed",parsed_2=new Date(514800000);
 var sdf_2=C(pattern_2), date_2=sdf_2.parse(formatted_2);
 console.log(pattern_2);
-console.log(428400000 == date_2.getTime(),428400000,date_2.getTime());
+console.log(514800000 == date_2.getTime(),514800000,date_2.getTime());
 console.log(parsed_2,date_2);
 console.log(sdf_2,"\n");
 
-//EEE: Tue
-var pattern_3="EEE",formatted_3="Tue",parsed_3=new Date(428400000);
+//EEE: Wed
+var pattern_3="EEE",formatted_3="Wed",parsed_3=new Date(514800000);
 var sdf_3=C(pattern_3), date_3=sdf_3.parse(formatted_3);
 console.log(pattern_3);
-console.log(428400000 == date_3.getTime(),428400000,date_3.getTime());
+console.log(514800000 == date_3.getTime(),514800000,date_3.getTime());
 console.log(parsed_3,date_3);
 console.log(sdf_3,"\n");
 
-//EEEE: Tuesday
-var pattern_4="EEEE",formatted_4="Tuesday",parsed_4=new Date(428400000);
+//EEEE: Wednesday
+var pattern_4="EEEE",formatted_4="Wednesday",parsed_4=new Date(514800000);
 var sdf_4=C(pattern_4), date_4=sdf_4.parse(formatted_4);
 console.log(pattern_4);
-console.log(428400000 == date_4.getTime(),428400000,date_4.getTime());
+console.log(514800000 == date_4.getTime(),514800000,date_4.getTime());
 console.log(parsed_4,date_4);
 console.log(sdf_4,"\n");
 
-//EEEEE: Tuesday
-var pattern_5="EEEEE",formatted_5="Tuesday",parsed_5=new Date(428400000);
+//EEEEE: Wednesday
+var pattern_5="EEEEE",formatted_5="Wednesday",parsed_5=new Date(514800000);
 var sdf_5=C(pattern_5), date_5=sdf_5.parse(formatted_5);
 console.log(pattern_5);
-console.log(428400000 == date_5.getTime(),428400000,date_5.getTime());
+console.log(514800000 == date_5.getTime(),514800000,date_5.getTime());
 console.log(parsed_5,date_5);
 console.log(sdf_5,"\n");
 

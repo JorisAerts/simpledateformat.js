@@ -97,9 +97,9 @@ var SimpleDateFormat = function (_cache) {
 				if (l < 3) {
 					value = _int(value) - 1;
 				} else if (l == 3) {
-					value = locale.MonthsShort.indexOf(value);
+					value = locale.Month.short.indexOf(value);
 				} else if (l > 3) {
-					value = locale.Months.indexOf(value);
+					value = locale.Month.long.indexOf(value);
 				}
 				date.setMonth(value);
 			}),
@@ -113,9 +113,9 @@ var SimpleDateFormat = function (_cache) {
 			"E": _createPattern(RegExBuilder.wordChar(false), function(format, value, date, locale){
 				var l = format.length, current = date.getDay();
 				if (l < 4) {
-					value = locale.DaysShort.indexOf(value);
+					value = locale.Day.short.indexOf(value);
 				} else if (l > 3) {
-					value = locale.Days.indexOf(value);
+					value = locale.Day.long.indexOf(value);
 				}
 				date.setDate(date.getDate() + (7 + value - current) % 7);
 			})
@@ -133,38 +133,78 @@ var SimpleDateFormat = function (_cache) {
 		// Feature Tested: NOT YET FULLY SUPPORTED IN ALL BROWSERS!
 		getLocale = function(){
 
-			if(new Date().toLocaleString() === new Date().toLocaleString("en", { month: "long" })){
-				// No locale browser support
+            var defaultLocale = function(){
+                var ret = {
+                        Month: {
+                            long: [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+                        },
+                        Day: {
+                            long: [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ]
+                        }
+                    },
+                    add = ["narrow", "short"];
+
+                for(var n in ret){
+                    for(var a = 0; a < add.length; a++){
+                        ret[n][add[a]] = [];
+                        for(var i = 0; i < ret[n].long.length; i++) {
+                            ret[n][add[a]][i] = ret[n].long[i].substr(0,3);
+                        }
+                    }
+                }
+                ret.Era = {
+                    long:["AD", "BC"]
+                };
+                for(var n in ret.Month){
+                    ret.Era[n] = ret.Era.long;
+                }
+                return ret;
+            }();
+
+            function getLocaleString(locale, d, v, type){
+                var opts = { };
+                opts[v] = type || "long";
+                return(d.toLocaleString(locale,opts));
+            }
+
+            if(new Date().toLocaleString() === getLocaleString("en", new Date(), "month")){
+                // No locale browser support
 				return function(locale) {
-					return SimpleDateFormat.Locale[locale] ? SimpleDateFormat.Locale[locale] : SimpleDateFormat.Locale["en"];
+					return SimpleDateFormat.Locale && SimpleDateFormat.Locale[locale] ? SimpleDateFormat.Locale[locale] : defaultLocale;
 				};
 
 			}
 
-			function getLocaleString(locale, d, v, type){
-				var opts = { };
-				opts[v] = type || "long";
-				return(d.toLocaleString(locale,opts));
-			}
 
 			// browser support for locale!
 			return function (locale) {
-				var dateRef = new Date(),
+				var v,dateRef = new Date(0),
 					year = dateRef.getFullYear(),
-					day,
-					ret = { days: [], months: []  };
-				dateRef.setMonth(0);
-				dateRef.setDate(0);
-				day = dateRef.getDay();
-				for (var i = 0; i < 7; i++) {
-					ret.days[(7 + i - day) % 7] = getLocaleString(locale, dateRef, "weekday");
-					dateRef.setMonth(dateRef.getMonth() + 1);
+					day = dateRef.getDay(),
+					ret = {
+                        Day:    { narrow: [], short: [], long: [] },
+                        Month:  { narrow: [], short: [], long: [] },
+                        Era:    { narrow: [], short: [], long: [] }
+                    };
+                for (var i = day; i < day + 7; i++) {
+                    for(v in ret.Day){
+                        ret.Day[v][i % 7] = getLocaleString(locale, dateRef, "weekday", v);
+                    }
+                    dateRef.setDate(dateRef.getDate() + 1);
 				}
-				while (year == dateRef.getFullYear()) {
-					ret.months.push(getLocaleString(locale, dateRef, "month"));
-					dateRef.setMonth(dateRef.getMonth() + 1);
-				}
-				return ret;
+                while (year == dateRef.getFullYear()) {
+                    for(v in ret.Month){
+                        ret.Month[v][i % 7] = getLocaleString(locale, dateRef, "month", v);
+                    }
+                    dateRef.setMonth(dateRef.getMonth() + 1);
+                }
+                for(v in ret.Era){
+                    ret.Era[v] = [
+                        getLocaleString(locale, new Date(-2000 * 360 * 24 * 3600 * 1000), "era", v),
+                        getLocaleString(locale, new Date(0), "era", v)
+                    ];
+                }
+                return ret;
 			};
 
 		}(),
@@ -214,7 +254,7 @@ var SimpleDateFormat = function (_cache) {
 				i = 1, l = match ? match.length : 0,
 				date = new Date(0),
 				c;
-			for (; i < l; i++) {
+            for (; i < l; i++) {
 				pattern = index[i - 1],
 					c = pattern.charAt(0);
 				if (Patterns.hasOwnProperty(c)) {
@@ -242,21 +282,7 @@ var SimpleDateFormat = function (_cache) {
 	};
 
 	SimpleDateFormat.Locale = {
-		en: function(){
-			var ret = {
-                    Months: [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-                    Days: [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ],
-                },
-                names = ["Months", "Days"];
-            for(var n=0; n < names.length; n++){
-                ret[names[n]+"Short"] = [];
-                for(var i=0; i< ret[names[n]].length; i++){
-                    ret[names[n]+"Short"][i] = ret[names[n]][i].substr(0,3);
-                }
-            }
-            ret.Era = [ "AD", "BC" ];
-            return ret;
-		}()
+		en: getLocale("en")
 	};
 
 	return SimpleDateFormat;
