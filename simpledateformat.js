@@ -84,11 +84,11 @@ var SimpleDateFormat = function (_cache) {
 		},
 
 		Patterns = {
-			"Y": _createPattern(RegExBuilder.len(), function (format, value, date) {
+			"Y": _createPattern(RegExBuilder.wordChar(true,false), function (format, value, date) {
 				value = _int(value);
 				date[format.length > 2 ? "setFullYear" : "setYear"](value);
 			}),
-			"y": _createPattern(RegExBuilder.len(), function (format, value, date) {
+			"y": _createPattern(RegExBuilder.wordChar(true,false), function (format, value, date) {
 				value = _int(value);
 				date[format.length > 2 ? "setFullYear" : "setYear"](value);
 			}),
@@ -155,8 +155,8 @@ var SimpleDateFormat = function (_cache) {
                 ret.Era = {
                     long:["AD", "BC"]
                 };
-                for(var n in ret.Month){
-                    ret.Era[n] = ret.Era.long;
+                for(var a = 0; a < add.length; a++){
+                    ret.Era[add[a]] = ret.Era.long;
                 }
                 return ret;
             }();
@@ -178,7 +178,7 @@ var SimpleDateFormat = function (_cache) {
 
 			// browser support for locale!
 			return function (locale) {
-				var v,dateRef = new Date(0),
+				var dateRef = new Date(0),
 					year = dateRef.getFullYear(),
 					day = dateRef.getDay(),
 					ret = {
@@ -187,18 +187,18 @@ var SimpleDateFormat = function (_cache) {
                         Era:    { narrow: [], short: [], long: [] }
                     };
                 for (var i = day; i < day + 7; i++) {
-                    for(v in ret.Day){
+                    for(var v in ret.Day){
                         ret.Day[v][i % 7] = getLocaleString(locale, dateRef, "weekday", v);
                     }
                     dateRef.setDate(dateRef.getDate() + 1);
 				}
                 while (year == dateRef.getFullYear()) {
-                    for(v in ret.Month){
-                        ret.Month[v][i % 7] = getLocaleString(locale, dateRef, "month", v);
+                    for(var v in ret.Month){
+                        ret.Month[v].push(getLocaleString(locale, dateRef, "month", v));
                     }
                     dateRef.setMonth(dateRef.getMonth() + 1);
                 }
-                for(v in ret.Era){
+                for(var v in ret.Era){
                     ret.Era[v] = [
                         getLocaleString(locale, new Date(-2000 * 360 * 24 * 3600 * 1000), "era", v),
                         getLocaleString(locale, new Date(0), "era", v)
@@ -252,7 +252,7 @@ var SimpleDateFormat = function (_cache) {
 				index = ref[1],
 				match = source.match(regex),
 				i = 1, l = match ? match.length : 0,
-				date = new Date(0),
+				date = new Date(-3600000),
 				c;
             for (; i < l; i++) {
 				pattern = index[i - 1],

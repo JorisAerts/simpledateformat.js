@@ -106,7 +106,7 @@ public class Test {
 			writer.write(name);
 			final Object value = vars.get(name);
 			if (value != null) {
-				writer.write("=" + val(value));
+				writer.write("=" + value);
 			}
 			writer.write(--size > 0 ? "," : ";");
 		}
@@ -129,7 +129,7 @@ public class Test {
 	}
 
 	public void toOutput(final String... args) throws IOException {
-		writer.write("console.log(");
+		writer.write("outputResult(");
 		for (int i = 0; i < args.length; i++) {
 			writer.write(args[i]);
 			if (i < args.length - 1) {
@@ -145,8 +145,11 @@ public class Test {
 
 	public void shortcuts() throws IOException {
 		final Map<String, Object> vars = new HashMap<String, Object>();
-		writer.write("function C(f){ return new SimpleDateFormat(f); }");
+		vars.put("outputResult", "outputResult || function(a){ console.log(a) }");
 		var(vars);
+		newLine();
+		writer.write("function C(f){ return new SimpleDateFormat(f); }");
+		newLine();
 	}
 
 	public void parse_tests() throws IOException, ParseException {
@@ -154,37 +157,48 @@ public class Test {
 		//final Date date = GregorianCalendar.getInstance().getTime();
 		final Date date = new Date();
 		startFunction();
+		newLine();
 
 		shortcuts();
-		Map<String, Object> vars = new HashMap<String, Object>();
-		vars.put("date", new Date());
-		vars.put("time", date.getTime());
+		final Map<String, Object> vars = new HashMap<String, Object>();
+		vars.put("date", "new Date(" + date.getTime() + ");");
+		vars.put("time", val(date.getTime()));
 
+		var(vars);
+		newLine(2);
+
+		for (int i = 0; i < formats.length; i++) {
+			parse_single_test(date, formats[i]);
+		}
+		newLine();
+
+		closeFunction();
+	}
+
+	public void parse_single_test(final Date date, final SimpleDateFormat format) throws ParseException, IOException {
+		final String pattern = format.toPattern();
+		final String formatted = format.format(date);
+		final Date parsed = format.parse(formatted);
+
+		writer.write("//" + pattern + ": " + formatted + "\n");
+		startFunction();
+		Map<String, Object> vars = new HashMap<String, Object>();
+		vars.put("pattern", val(pattern));
+		vars.put("formatted", val(formatted));
+		vars.put("parsed", val(parsed));
 		var(vars);
 		newLine();
 
-		for (int i = 0; i < formats.length; i++) {
-			final String pattern = formats[i].toPattern();
-			final String formatted = formats[i].format(date);
-			final Date parsed = formats[i].parse(formatted);
+		vars = new HashMap<String, Object>();
+		vars.put("sdf", "C(pattern), s_parsed = sdf.parse(formatted)");
+		var(vars);
+		newLine();
 
-			writer.write("//" + pattern + ": " + formatted + "\n");
-			vars = new HashMap<String, Object>();
-			vars.put("pattern_" + i, pattern);
-			vars.put("formatted_" + i, formatted);
-			vars.put("parsed_" + i, parsed);
-			var(vars);
-			newLine();
-			writer.write("var sdf_" + i + "=C(pattern_" + i + "), date_" + i + "=sdf_" + i + ".parse(formatted_" + i + ");\n");
-			toOutput("pattern_" + i);
-			newLine();
-			toOutput(parsed.getTime() + " == date_" + i + ".getTime()", parsed.getTime() + "", "date_" + i + ".getTime()");
-			newLine();
-			toOutput("parsed_" + i, "date_" + i);
-			newLine();
-			toOutput("sdf_" + i, "\"\\n\"");
-			newLine(2);
-		}
+		toOutput("{ match: s_parsed.getTime() === parsed.getTime(), pattern:pattern, \n formatted: formatted, \n java: { parsed: parsed, time: parsed.getTime()  }, \n"
+				+ "javascript:{ sdf: sdf, parsed: s_parsed, time: s_parsed.getTime() } \n" + "}");
+
 		closeFunction();
+
+		newLine(2);
 	}
 }
