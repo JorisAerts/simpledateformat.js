@@ -1,7 +1,6 @@
 /**
 
- SimpleDateFormat (v0.1)
- by Joris Aerts 2014
+ SimpleDateFormat (v0.1) by Joris Aerts 2014
 
  Date and Time Patterns:
  =======================
@@ -28,7 +27,7 @@
  Z    Time zone    RFC 822 time zone    -0800
  X    Time zone    ISO 8601 time zone    -08; -0800; -08:00
 
- */
+*/
 var SimpleDateFormat = function (_cache) {
 
 	var
@@ -49,13 +48,13 @@ var SimpleDateFormat = function (_cache) {
 						(options.type || _regexEscape("d")) +
 						'{' + match.length + '}' +
 					')';
-				}
+				};
 			},
 			val: function (value) {
 				return function () {
 					var a = arguments;
 					return a.length < 2 ? a[0] : "(" + [].join.call(a, "|") + ")";
-				}
+				};
 			},
 			wordChar: function (decimal, word) {
 				return function () {
@@ -64,13 +63,13 @@ var SimpleDateFormat = function (_cache) {
 					}else{
 						return "(" + (word !== false ? "\\w" : "") + (decimal !== false ? "\\d" : "") + "+)";
 					}
-				}
+				};
 			}
 		},
 
 		_createValue = function (ret, increase) {
-			return ret ? (jQuery.isFunction(ret) ? ret : function (format, value, date) {
-				date[ret](_int(value) + (increase || 0), 10)
+			return ret ? (Object.prototype.toString.call(ret) === "[object Function]" ? ret : function (format, value, date) {
+				date[ret](_int(value) + (increase || 0), 10);
 			}) : function () {
 				// dummy function, nothing happens really...
 			};
@@ -96,15 +95,15 @@ var SimpleDateFormat = function (_cache) {
 			"M": _createPattern(RegExBuilder.wordChar(), function (format, value, date, locale) {
 				var l = format.length;
 				if (l < 3) {
-					value = _int(value);
+					value = _int(value) - 1;
 				} else if (l == 3) {
 					value = locale.MonthsShort.indexOf(value);
 				} else if (l > 3) {
 					value = locale.Months.indexOf(value);
 				}
-				date.setMonth(value - 1);
+				date.setMonth(value);
 			}),
-			"d": _createPattern(RegExBuilder.len(), "setDate", -1),
+			"d": _createPattern(RegExBuilder.len(), "setDate"),
 			"H": _createPattern(RegExBuilder.len(), "setHours"),
 			"m": _createPattern(RegExBuilder.len(), "setMinutes"),
 			"s": _createPattern(RegExBuilder.len(), "setSeconds"),
@@ -166,7 +165,7 @@ var SimpleDateFormat = function (_cache) {
 					dateRef.setMonth(dateRef.getMonth() + 1);
 				}
 				return ret;
-			}
+			};
 
 		}(),
 
@@ -245,17 +244,18 @@ var SimpleDateFormat = function (_cache) {
 	SimpleDateFormat.Locale = {
 		en: function(){
 			var ret = {
-				Months: [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-				Days: [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ],
-				Era: [ "AD", "BC" ]
-			};
-			jQuery.each(["Months", "Days"],function(i,n){
-				ret[n+"Short"] = [];
-				jQuery.each(ret[n],function(i, v){
-					ret[n+"Short"][i] = v.substr(0,3);
-				});
-			});
-			return ret;
+                    Months: [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+                    Days: [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ],
+                },
+                names = ["Months", "Days"];
+            for(var n=0; n < names.length; n++){
+                ret[names[n]+"Short"] = [];
+                for(var i=0; i< ret[names[n]].length; i++){
+                    ret[names[n]+"Short"][i] = ret[names[n]][i].substr(0,3);
+                }
+            }
+            ret.Era = [ "AD", "BC" ];
+            return ret;
 		}()
 	};
 
