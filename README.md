@@ -3,6 +3,9 @@ JavaScript implementation for SimpleDateFormat
 
 ## Features:
 - Caches the [format, SimpleDateFormatter]
+ 
+## TODO: 
+Rewrite the parser, without any Regex, because it won't work for dates like yyyyMMMdd (with no separators between the different patterns).
 
 ## Date & Time Patterns:
 | Supported | Letter | Date or Time Component | Presentation | Examples |
