@@ -46,7 +46,7 @@ var SimpleDateFormat = function (_cache) {
 				return function (match) {
 					return '(' +
 						(options.type || _regexEscape("d")) +
-						'{' + match.length + '}' +
+						'{' + (options.min || match.length) + ( options.max ? "," + options.max : "" ) + '}' +
 					')';
 				};
 			},
@@ -88,7 +88,7 @@ var SimpleDateFormat = function (_cache) {
 				value = _int(value);
 				date[format.length > 2 ? "setFullYear" : "setYear"](value);
 			}),
-			"y": _createPattern(RegExBuilder.wordChar(true,false), function (format, value, date) {
+			"y": _createPattern(RegExBuilder.len({ min:1, max: 4 }), function (format, value, date) {
 				value = _int(value);
 				date[format.length > 2 ? "setFullYear" : "setYear"](value);
 			}),
