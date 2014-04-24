@@ -14,43 +14,43 @@ public class Test {
 
 	final static SimpleDateFormat[] formats = new SimpleDateFormat[] {
 
-		new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS"),
+	new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS"),
 
-		new SimpleDateFormat("E"),
+	new SimpleDateFormat("E"),
 
-		new SimpleDateFormat("EE"),
+	new SimpleDateFormat("EE"),
 
-		new SimpleDateFormat("EEE"),
+	new SimpleDateFormat("EEE"),
 
-		new SimpleDateFormat("EEEE"),
+	new SimpleDateFormat("EEEE"),
 
-		new SimpleDateFormat("EEEEE"),
+	new SimpleDateFormat("EEEEE"),
 
-		new SimpleDateFormat("M"),
+	new SimpleDateFormat("M"),
 
-		new SimpleDateFormat("MM"),
+	new SimpleDateFormat("MM"),
 
-		new SimpleDateFormat("MMM"),
+	new SimpleDateFormat("MMM"),
 
-		new SimpleDateFormat("MMMM"),
+	new SimpleDateFormat("MMMM"),
 
-		new SimpleDateFormat("MMMMM"),
+	new SimpleDateFormat("MMMMM"),
 
-		new SimpleDateFormat("G"),
+	new SimpleDateFormat("G"),
 
-		new SimpleDateFormat("GG"),
+	new SimpleDateFormat("GG"),
 
-		new SimpleDateFormat("GGG"),
+	new SimpleDateFormat("GGG"),
 
-		new SimpleDateFormat("GGGG"),
+	new SimpleDateFormat("GGGG"),
 
-		new SimpleDateFormat("y"),
+	new SimpleDateFormat("y"),
 
-		new SimpleDateFormat("yy"),
+	new SimpleDateFormat("yy"),
 
-		new SimpleDateFormat("yyy"),
+	new SimpleDateFormat("yyy"),
 
-		new SimpleDateFormat("yyyy")
+	new SimpleDateFormat("yyyy")
 
 	};
 
@@ -145,7 +145,7 @@ public class Test {
 
 	public void shortcuts() throws IOException {
 		final Map<String, Object> vars = new HashMap<String, Object>();
-		vars.put("outputResult", "outputResult || function(a){ console.log(a) }");
+		vars.put("outputResult", "window.outputResult || function(a){ console.log(a) }");
 		var(vars);
 		newLine();
 		writer.write("function C(f){ return new SimpleDateFormat(f); }");

@@ -21,19 +21,41 @@
       text-align: center;
     }
 
+    tbody tr td {
+      padding: .3em 1em;
+    }
+
+    tr.fail {
+      background-color: #FCC;
+    }
+
   --></style>
   <body>
-    <h1>SimpleDateFormat parser test</h1>
+    <h1>SimpleDateFormat test</h1>
     <table>
       <thead>
-        <tr><th data-dateFormat="dd-MM-yyyy HH:mm:ss.SSS">Col 1</th><th data-dateFormat="yyyy">Col 2</th><th>Col 3</th><th>Col 4</th><th>Col 5</th></tr>
+        <tr><th>OK?</th><th>Pattern</th><th>Col 3</th><th>Col 4</th><th>Col 5</th></tr>
       </thead>
       <tbody>
-        
+
       </tbody>
     </table>
 
     <script src="../simpledateformat.js" ></script>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script>
+      var tbody = jQuery("table tbody");
+      window.outputResult = function(result){
+        tbody.append('<tr class="' + ( result.match === true ? "" : "fail" ) + '">' +
+                "<td>" + result.match + "</td>" +
+                "<td>" + result.pattern + "</td>" +
+                "<td></td>" +
+                "<td></td>" +
+                "<td></td>" +
+                "</tr>");
+      }
+
+    </script>
     <script src="test.js" ></script>
   </body>
 </html>
